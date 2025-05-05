@@ -38,7 +38,3 @@ out/
 
 ### Kotlin ###
 .kotlin
-
-### include React ###
-!src/main/kotlin/com/tyranocraft/frontend/
-!src/main/kotlin/com/tyranocraft/frontend/**
