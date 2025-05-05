@@ -1,0 +1,103 @@
+# 할일
+# [X] H2 추가
+# [X] queryDSL 추가
+# [X] 프로파일 추가(local, develop, prod)
+# [X] Srping Security 설정 추가
+#   [ ] csrf, cors, sessionManagement, authenticationEntryPoint, accessDeniedHandler, jwt 등 다른 설정 추가
+# [X] API 하나 만들기
+# [X] DB - 로컬(H2)
+# [ ] DB - Dev, prod
+# [ ] DB 저장(엔티티 생성)
+
+spring:
+  thymeleaf:
+    cache: false
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    hikari:
+      auto-commit: false
+logging:
+  level:
+    jdbc:
+      resultsettable: OFF
+      sqlonly: OFF
+      sqltiming: OFF
+      audit: OFF
+      resultset: OFF
+      connection: OFF
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    hikari:
+      maximum-pool-size: 10
+      idle-timeout: 30000 #30s
+      max-lifetime: 50000 #50s
+      connection-timeout: 3000 # 3s
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: develop
+  datasource:
+    url: jdbc:mysql://localhost:3306/testdb?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      idle-timeout: 30000 #30s
+      max-lifetime: 50000 #50s
+      connection-timeout: 3000 # 3s
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    jdbc-url: jdbc:mysql://localhost:3306/testdb?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 5
+      idle-timeout: 30000 #30s
+      max-lifetime: 50000 #50s
+      connection-timeout: 3000 # 3s
